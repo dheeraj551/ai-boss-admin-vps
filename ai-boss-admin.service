@@ -1,0 +1,34 @@
+[Unit]
+Description=AI Boss Admin - Production VPS Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/ai-boss-admin
+EnvironmentFile=/opt/ai-boss-admin/.env.production
+Environment=PATH=/opt/ai-boss-admin/venv/bin
+ExecStart=/opt/ai-boss-admin/venv/bin/python optimized_ai_boss_admin.py
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ai-boss-admin
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/ai-boss-admin/logs
+ReadWritePaths=/tmp
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target
